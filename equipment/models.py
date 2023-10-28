@@ -3,7 +3,7 @@ from django.core.validators import RegexValidator
 
 
 class EquipmentType(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
     mask = models.CharField(max_length=10, unique=True, validators=[
         RegexValidator(
             regex='^[NAaXZ]{10}$',
@@ -12,8 +12,13 @@ class EquipmentType(models.Model):
         ),
     ])
 
+    def __str__(self):
+        return self.name + ' ' + f'({self.mask})'
+
 
 class Equipment(models.Model):
     equipment_type = models.ForeignKey(EquipmentType, on_delete=models.CASCADE)
     serial_number = models.CharField(max_length=10)
     notice = models.TextField()
+
+# ^[A-Z0-9]{6}[A-Z0-9\\-_\\@]{1}[A-Za-z0-9]{3}$
