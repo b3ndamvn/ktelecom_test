@@ -20,5 +20,3 @@ class Equipment(models.Model):
     equipment_type = models.ForeignKey(EquipmentType, on_delete=models.CASCADE)
     serial_number = models.CharField(max_length=10)
     notice = models.TextField()
-
-# ^[A-Z0-9]{6}[A-Z0-9\\-_\\@]{1}[A-Za-z0-9]{3}$
