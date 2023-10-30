@@ -28,14 +28,20 @@ class EquipmentViewSet(viewsets.ModelViewSet):
     http_method_names = ['get', 'post', 'put', 'delete']
 
     def create(self, request, *args, **kwargs):
+        not_valid = []
         for data in request.data:
             equipment_type_object = EquipmentType.objects.filter(pk=data['equipment_type']).first()
             mask = ''
             for mask_symbol in equipment_type_object.mask:
                 mask += f'[{regex_symbols.get(mask_symbol)}]' + '{1}'
             if not re.match(mask, data['serial_number']):
-                return Response(status=400, data='Ошибка!')
-        serializer = self.get_serializer(data=request.data, many=True)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        return Response(status=201, data='Запись прошла успешно')
+                not_valid.append(data['serial_number'])
+                continue
+            serializer = self.get_serializer(data=data)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+        if not not_valid:
+            return Response(status=201, data='Запись прошла успешно')
+        if len(not_valid) == len(request.data):
+            return Response(status=400, data='Ни одно оборудование не прошло валидацию')
+        return Response(status=201, data=f'Часть оборудования прошла валидацию. Оборудование, не прошедшее валидацию {not_valid}')
