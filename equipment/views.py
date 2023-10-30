@@ -25,6 +25,7 @@ class EquipmentTypeListAPIView(ListAPIView):
 class EquipmentViewSet(viewsets.ModelViewSet):
     queryset = Equipment.objects.all()
     serializer_class = EquipmentSerializer
+    http_method_names = ['get', 'post', 'put', 'delete']
 
     def create(self, request, *args, **kwargs):
         for data in request.data:
