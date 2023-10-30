@@ -29,7 +29,13 @@ class EquipmentViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         not_valid = []
-        for data in request.data:
+        print(request.data)
+        if not isinstance(request.data, list):
+            req_data = [request.data]
+        else:
+            req_data = request.data
+        for data in req_data:
+            print(data)
             equipment_type_object = EquipmentType.objects.filter(pk=data['equipment_type']).first()
             mask = ''
             for mask_symbol in equipment_type_object.mask:
