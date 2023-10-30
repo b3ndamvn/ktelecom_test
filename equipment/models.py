@@ -18,5 +18,5 @@ class EquipmentType(models.Model):
 
 class Equipment(models.Model):
     equipment_type = models.ForeignKey(EquipmentType, on_delete=models.CASCADE)
-    serial_number = models.CharField(max_length=10)
+    serial_number = models.CharField(max_length=10, unique=True)
     notice = models.TextField()
